@@ -21,7 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.PlayActivity" />
+        <activity android:name=".activity.DecodeAudioActivity" />
+        <activity android:name=".activity.DecodeVideoActivity" />
+        <activity android:name=".activity.EncodeAudioActivity" />
+        <activity android:name=".activity.EncodeVideoActivity"></activity>
     </application>
 
 </manifest>

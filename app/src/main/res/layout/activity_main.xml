@@ -2,16 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <Button
-        android:id="@+id/btn_play"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="play"
-        android:padding="30dp"
-        android:text="播放"
-        android:textSize="30sp" />
+        android:onClick="decodeAudio"
+        android:text="@string/decode_audio" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="decodeVideo"
+        android:text="@string/decode_video" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="encodeAudio"
+        android:text="@string/encode_audio" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="encodeVideo"
+        android:text="@string/encode_video" />
 
 </LinearLayout>

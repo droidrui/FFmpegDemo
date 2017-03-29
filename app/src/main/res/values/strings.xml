@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FFmpegDemo</string>
+    <string name="decode_audio">解码音频</string>
+    <string name="decode_video">解码视频</string>
+    <string name="encode_audio">编码音频</string>
+    <string name="encode_video">编码视频</string>
 </resources>

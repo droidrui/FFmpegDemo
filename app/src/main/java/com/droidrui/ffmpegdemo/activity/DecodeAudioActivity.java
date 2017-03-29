@@ -11,7 +11,7 @@ import com.droidrui.ffmpegdemo.jni.AudioJNI;
 
 import java.io.File;
 
-public class PlayActivity extends AppCompatActivity {
+public class DecodeAudioActivity extends AppCompatActivity {
 
     private Button mBtn;
     private int mState = 0;
@@ -20,12 +20,13 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play);
+        setContentView(R.layout.activity_decode_audio);
 
         initView();
         mAudioJNI = new AudioJNI();
-        File file = new File(Environment.getExternalStorageDirectory(), "record.pcm");
-        mAudioJNI.initPlay(44100, file.getAbsolutePath());
+        File input = new File(Environment.getExternalStorageDirectory(), "00.mp3");
+        File output = new File(Environment.getExternalStorageDirectory(), "record.pcm");
+        mAudioJNI.initDecode(1024, input.getAbsolutePath(), output.getAbsolutePath());
     }
 
     private void initView() {
@@ -43,12 +44,12 @@ public class PlayActivity extends AppCompatActivity {
             case 0:
                 mState = 1;
                 mBtn.setText("停止");
-                mAudioJNI.startPlay();
+                mAudioJNI.startDecode();
                 break;
             case 1:
                 mState = 0;
                 mBtn.setText("播放");
-                mAudioJNI.stopPlay();
+                mAudioJNI.stopDecode();
                 break;
         }
     }
@@ -58,7 +59,7 @@ public class PlayActivity extends AppCompatActivity {
         super.onDestroy();
         if (mState == 1) {
             mState = 0;
-            mAudioJNI.stopPlay();
+            mAudioJNI.stopDecode();
         }
     }
 }

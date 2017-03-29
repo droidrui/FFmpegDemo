@@ -26,9 +26,9 @@ set_target_properties(swscale PROPERTIES IMPORTED_LOCATION
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_library(audio SHARED
-            jni_audio.c
+            AudioJNI.c
             opensl.c
-            ffmpeg.c
+            AudioDecoder.c
            )
 
 target_include_directories(audio PRIVATE

@@ -21,7 +21,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void play(View view) {
-        startActivity(new Intent(this, PlayActivity.class));
+    public void decodeAudio(View view) {
+        startActivity(new Intent(this, DecodeAudioActivity.class));
+    }
+
+    public void decodeVideo(View view) {
+        startActivity(new Intent(this, DecodeVideoActivity.class));
+    }
+
+    public void encodeAudio(View view) {
+        startActivity(new Intent(this, EncodeAudioActivity.class));
+    }
+
+    public void encodeVideo(View view) {
+        startActivity(new Intent(this, EncodeVideoActivity.class));
     }
 }

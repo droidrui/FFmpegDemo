@@ -6,10 +6,16 @@ package com.droidrui.ffmpegdemo.jni;
 
 public class AudioJNI {
 
-    public native void initPlay(int framesPerBuffer, String filePath);
+    public native void initDecode(int bufferSize, String inputPath, String outputPath);
 
-    public native void startPlay();
+    public native void startDecode();
 
-    public native void stopPlay();
+    public native void stopDecode();
+
+    public native void initEncode(int bufferSize, String inputPath, String outputPath);
+
+    public native void startEncode();
+
+    public native void stopEncode();
 
 }
