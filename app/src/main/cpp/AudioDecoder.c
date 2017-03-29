@@ -5,7 +5,7 @@
 #include "AudioDecoder.h"
 
 
-static int getFrame(struct AudioDecoder *decoder, void **buffer, int *pSize) {
+static int getFrame(struct AudioDecoder *decoder, uint8_t **buffer, int *pSize) {
     while (av_read_frame(decoder->pFormatCtx, decoder->packet) >= 0) {
         if (decoder->packet->stream_index == decoder->audioStream) {
 

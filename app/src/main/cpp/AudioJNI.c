@@ -15,7 +15,7 @@ static volatile int g_loop_exit = 0;
 
 JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_initDecode
         (JNIEnv *env, jobject thiz, jint bufferSize, jstring inputPath, jstring outputPath) {
-    decoderBufferSize = bufferSize * 2 * sizeof(short) * 10;
+    decoderBufferSize = bufferSize * 2 * sizeof(short) * 16;
     player = newAudioPlayer(44100, 2, bufferSize);
     const char *input = (*env)->GetStringUTFChars(env, inputPath, NULL);
     const char *output = (*env)->GetStringUTFChars(env, outputPath, NULL);
@@ -25,12 +25,12 @@ JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_initDecode
 }
 
 void *decode(void *context) {
-    void *buffer;
+    uint8_t *buffer;
     int size;
     g_loop_exit = 0;
     while (!g_loop_exit) {
         if (decoder->getFrame(decoder, &buffer, &size) == 0) {
-            player->writeToPlayer(player, (short *) buffer, size / sizeof(2));
+            player->writeToPlayer(player, buffer, size);
         } else {
             break;
         }

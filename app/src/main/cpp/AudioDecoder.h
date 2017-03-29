@@ -28,7 +28,7 @@ typedef struct AudioDecoder {
 
     FILE *pFile;
 
-    int (*getFrame)(struct AudioDecoder *decoder, void **buffer, int *pSize);
+    int (*getFrame)(struct AudioDecoder *decoder, uint8_t **buffer, int *pSize);
 
 } AudioDecoder;
 

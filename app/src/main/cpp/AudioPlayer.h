@@ -29,12 +29,12 @@ typedef struct AudioPlayer {
     int playBufferSize;
     int playChannel;
     int playSampleRate;
-    short *playBuffer[2];
+    uint8_t *playBuffer[2];
     int currPlayBufferIndex;
     int currPlayWriteIndex;
     ThreadLock *playLock;
 
-    void (*writeToPlayer)(struct AudioPlayer *player, short *buffer, int size);
+    void (*writeToPlayer)(struct AudioPlayer *player, uint8_t *buffer, int size);
 
 } AudioPlayer;
 

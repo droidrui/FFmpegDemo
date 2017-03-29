@@ -17,16 +17,16 @@ static void playCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     notifyThreadLock(player->playLock);
 }
 
-static void writeToPlayer(AudioPlayer *player, short *buffer, int size) {
+static void writeToPlayer(AudioPlayer *player, uint8_t *buffer, int size) {
     int index = player->currPlayWriteIndex;
-    short *slBuffer = player->playBuffer[player->currPlayBufferIndex];
+    uint8_t *slBuffer = player->playBuffer[player->currPlayBufferIndex];
     for (int i = 0; i < size; i++) {
         slBuffer[index++] = buffer[i];
         if (index >= player->playBufferSize) {
             waitThreadLock(player->playLock);
             (*player->playerBufferQueueItf)->Enqueue(player->playerBufferQueueItf,
                                                      slBuffer,
-                                                     player->playBufferSize * sizeof(short));
+                                                     player->playBufferSize * sizeof(uint8_t));
             player->currPlayBufferIndex = (player->currPlayBufferIndex ? 0 : 1);
             index = 0;
             slBuffer = player->playBuffer[player->currPlayBufferIndex];
@@ -43,11 +43,11 @@ AudioPlayer *newAudioPlayer(int sampleRate, int numChannel, int bufferSize) {
 
     player->playSampleRate = sampleRate;
     player->playChannel = numChannel;
-    player->playBufferSize = bufferSize * numChannel;
+    player->playBufferSize = bufferSize * numChannel * 2;
 
     player->playLock = createThreadLock();
-    player->playBuffer[0] = (short *) calloc(player->playBufferSize, sizeof(short));
-    player->playBuffer[1] = (short *) calloc(player->playBufferSize, sizeof(short));
+    player->playBuffer[0] = (uint8_t *) calloc(player->playBufferSize, sizeof(uint8_t));
+    player->playBuffer[1] = (uint8_t *) calloc(player->playBufferSize, sizeof(uint8_t));
 
     player->currPlayBufferIndex = 0;
     player->currPlayWriteIndex = 0;
