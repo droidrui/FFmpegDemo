@@ -7,8 +7,6 @@
 #include "libavformat/avformat.h"
 #include "libswresample/swresample.h"
 
-#define MAX_AUDIO_FRAME_SIZE 192000
-
 typedef struct AudioDecoder {
 
     AVFormatContext *pFormatCtx;
@@ -24,15 +22,17 @@ typedef struct AudioDecoder {
     int64_t in_channel_layout;
     SwrContext *au_convert_ctx;
 
+    int maxBufferSize;
+
     int out_buffer_size;
 
     FILE *pFile;
 
-    int (*getFrame)(struct AudioDecoder *decoder, void *buffer, int size);
+    int (*getFrame)(struct AudioDecoder *decoder, void **buffer, int *pSize);
 
 } AudioDecoder;
 
-AudioDecoder *newAudioDecoder(const char *inputPath, const char *outputPath);
+AudioDecoder *newAudioDecoder(int maxBufferSize, const char *inputPath, const char *outputPath);
 
 void deleteAudioDecoder(AudioDecoder *decoder);
 

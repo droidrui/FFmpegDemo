@@ -3,40 +3,43 @@
 //
 #include <jni.h>
 #include <stdio.h>
-#include "opensl.h"
+#include "AudioPlayer.h"
 #include "AudioDecoder.h"
-#include "log.h"
 
-//static OpenSLEngine *engine;
-//static FILE *playFile;
-//static int playBufferSize;
-//static volatile int g_loop_exit = 0;
+static AudioPlayer *player;
 static AudioDecoder *decoder;
+
+static int decoderBufferSize;
+
+static volatile int g_loop_exit = 0;
 
 JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_initDecode
         (JNIEnv *env, jobject thiz, jint bufferSize, jstring inputPath, jstring outputPath) {
-//    playBufferSize = bufferSize * 1 * 4;
-//    engine = createEngine();
-//    playFile = fopen(input, "rb");
-//    createPlayer(engine, 44100, 1, bufferSize);
+    decoderBufferSize = bufferSize * 2 * sizeof(short) * 10;
+    player = newAudioPlayer(44100, 2, bufferSize);
     const char *input = (*env)->GetStringUTFChars(env, inputPath, NULL);
     const char *output = (*env)->GetStringUTFChars(env, outputPath, NULL);
-    decoder = newAudioDecoder(input, output);
+    decoder = newAudioDecoder(decoderBufferSize, input, output);
     (*env)->ReleaseStringUTFChars(env, inputPath, input);
     (*env)->ReleaseStringUTFChars(env, outputPath, output);
 }
 
 void *decode(void *context) {
-//    short buffer[playBufferSize];
-//    g_loop_exit = 0;
-//    while (!g_loop_exit && !feof(playFile)) {
-//        fread(buffer, sizeof(short), playBufferSize, playFile);
-//        writeToPlayer(engine, buffer, playBufferSize);
-//    }
-//    destroyEngine(engine);
-//    fclose(playFile);
-    int result = decoder->getFrame(decoder, NULL, 0);
-    LOGE("result = %d", result);
+    void *buffer;
+    int size;
+    g_loop_exit = 0;
+    while (!g_loop_exit) {
+        if (decoder->getFrame(decoder, &buffer, &size) == 0) {
+            player->writeToPlayer(player, (short *) buffer, size / sizeof(2));
+        } else {
+            break;
+        }
+    }
+    deleteAudioDecoder(decoder);
+    decoder = NULL;
+    deleteAudioPlayer(player);
+    player = NULL;
+    buffer = NULL;
 }
 
 JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_startDecode
@@ -53,9 +56,7 @@ JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_startDecode
 
 JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_AudioJNI_stopDecode
         (JNIEnv *env, jobject thiz) {
-    //g_loop_exit = 1;
-    deleteAudioDecoder(decoder);
-    decoder = NULL;
+    g_loop_exit = 1;
 }
 
 

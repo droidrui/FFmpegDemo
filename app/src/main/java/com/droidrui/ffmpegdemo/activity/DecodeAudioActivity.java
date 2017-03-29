@@ -48,7 +48,7 @@ public class DecodeAudioActivity extends AppCompatActivity {
                 break;
             case 1:
                 mState = 0;
-                mBtn.setText("播放");
+                mBtn.setText("解码播放");
                 mAudioJNI.stopDecode();
                 break;
         }

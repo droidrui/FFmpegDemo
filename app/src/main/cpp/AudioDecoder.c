@@ -5,7 +5,7 @@
 #include "AudioDecoder.h"
 
 
-static int getFrame(struct AudioDecoder *decoder, void *buffer, int size) {
+static int getFrame(struct AudioDecoder *decoder, void **buffer, int *pSize) {
     while (av_read_frame(decoder->pFormatCtx, decoder->packet) >= 0) {
         if (decoder->packet->stream_index == decoder->audioStream) {
 
@@ -16,7 +16,7 @@ static int getFrame(struct AudioDecoder *decoder, void *buffer, int size) {
                 return -1;
             }
             if (decoder->got_picture > 0) {
-                swr_convert(decoder->au_convert_ctx, &(decoder->out_buffer), MAX_AUDIO_FRAME_SIZE,
+                swr_convert(decoder->au_convert_ctx, &(decoder->out_buffer), decoder->maxBufferSize,
                             (const uint8_t **) decoder->pFrame->data, decoder->pFrame->nb_samples);
 
                 printf("index:%5d\t pts:%lld\t packet size:%d\n", decoder->index,
@@ -25,18 +25,26 @@ static int getFrame(struct AudioDecoder *decoder, void *buffer, int size) {
                 //Write PCM
                 fwrite(decoder->out_buffer, 1, decoder->out_buffer_size, decoder->pFile);
                 decoder->index++;
+
+                *buffer = decoder->out_buffer;
+                *pSize = decoder->out_buffer_size;
+
+                av_packet_unref(decoder->packet);
+
+                return 0;
             }
         }
         av_packet_unref(decoder->packet);
     }
-    return 0;
+    return -1;
 }
 
-AudioDecoder *newAudioDecoder(const char *inputPath, const char *outputPath) {
+AudioDecoder *newAudioDecoder(int maxBufferSize, const char *inputPath, const char *outputPath) {
     AudioDecoder *decoder = (AudioDecoder *) calloc(1, sizeof(AudioDecoder));
     decoder->getFrame = getFrame;
     decoder->pFile = fopen(outputPath, "wb");
     decoder->index = 0;
+    decoder->maxBufferSize = maxBufferSize / 2;
 
     av_register_all();
     avformat_network_init();
@@ -87,7 +95,7 @@ AudioDecoder *newAudioDecoder(const char *inputPath, const char *outputPath) {
     av_init_packet(decoder->packet);
 
     //Out Audio Param
-    uint64_t out_channel_layout = AV_CH_LAYOUT_MONO;
+    uint64_t out_channel_layout = AV_CH_LAYOUT_STEREO;
     //nb_samples: AAC-1024 MP3-1152
     int out_nb_samples = decoder->pCodecCtx->frame_size;
     enum AVSampleFormat out_sample_fmt = AV_SAMPLE_FMT_S16;
@@ -97,7 +105,7 @@ AudioDecoder *newAudioDecoder(const char *inputPath, const char *outputPath) {
     decoder->out_buffer_size = av_samples_get_buffer_size(NULL, out_channels, out_nb_samples,
                                                           out_sample_fmt, 1);
 
-    decoder->out_buffer = (uint8_t *) av_malloc(MAX_AUDIO_FRAME_SIZE * 2);
+    decoder->out_buffer = (uint8_t *) av_malloc(decoder->maxBufferSize * 2);
     decoder->pFrame = av_frame_alloc();
 
     //FIX:Some Codec's Context Information is missing
