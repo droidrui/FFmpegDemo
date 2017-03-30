@@ -1,0 +1,8 @@
+//
+// Created by Administrator on 2017/3/30.
+//
+
+#ifndef FFMPEGDEMO_VIDEODECODER_H
+#define FFMPEGDEMO_VIDEODECODER_H
+
+#endif //FFMPEGDEMO_VIDEODECODER_H

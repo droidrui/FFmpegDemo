@@ -29,6 +29,8 @@ add_library(audio SHARED
             AudioJNI.c
             AudioPlayer.c
             AudioDecoder.c
+            VideoJNI.c
+            VideoDecoder.c
            )
 
 target_include_directories(audio PRIVATE
