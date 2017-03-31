@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     static {
-        System.loadLibrary("audio");
+        System.loadLibrary("media");
     }
 
     @Override

@@ -25,7 +25,7 @@ set_target_properties(swscale PROPERTIES IMPORTED_LOCATION
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
-add_library(audio SHARED
+add_library(media SHARED
             AudioJNI.c
             AudioPlayer.c
             AudioDecoder.c
@@ -33,10 +33,10 @@ add_library(audio SHARED
             VideoDecoder.c
            )
 
-target_include_directories(audio PRIVATE
+target_include_directories(media PRIVATE
                            ${distribution_DIR}/ffmpeg/include)
 
-target_link_libraries(audio
+target_link_libraries(media
                       android
                       log
                       z

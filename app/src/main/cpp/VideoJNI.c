@@ -4,7 +4,7 @@
 #include <jni.h>
 
 JNIEXPORT void JNICALL Java_com_droidrui_ffmpegdemo_jni_VideoJNI_initDecode
-        (JNIEnv *env, jobject thiz, jstring inputPath, jstring outputPath) {
+        (JNIEnv *env, jobject thiz, jobject surface, jstring inputPath, jstring outputPath) {
 
 }
 

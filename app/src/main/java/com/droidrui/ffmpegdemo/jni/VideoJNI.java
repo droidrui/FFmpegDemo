@@ -6,7 +6,7 @@ package com.droidrui.ffmpegdemo.jni;
 
 public class VideoJNI {
 
-    public native void initDecode(String inputPath, String outputPath);
+    public native void initDecode(Object surface, String inputPath, String outputPath);
 
     public native void startDecode();
 
